@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Search, Dumbbell, Target, Calendar, Shuffle } from "lucide-react"
 import { getAllExercises, getBodyPartList, getEquipmentList, getTargetList } from "@/app/lib/api"
-import Header from "./header/page"
 
 export default function HomePage() {
   const [exercises, setExercises] = useState([])
@@ -78,56 +77,51 @@ export default function HomePage() {
     setSelectedTarget("")
   }
 
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-content">
+          <Dumbbell className="loading-icon" />
+          <p>Loading exercises...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="page-container">
-      <Header />
+      {/* Header */}
+      <header className="header">
+        <div className="container">
+          <div className="header-content">
+            <div className="logo">
+              <Dumbbell className="logo-icon" />
+              <h1>FitnessPro</h1>
+            </div>
+            <nav className="nav">
+              <Link href="/workout-plan" className="nav-link">
+                My Workouts
+              </Link>
+              <Link href="/muscle-explorer" className="nav-link">
+                Muscle Explorer
+              </Link>
+              <Link href="/equipment-mode" className="nav-link">
+                Equipment Mode
+              </Link>
+              <Link href="/random-exercise" className="nav-link">
+                Random Exercise
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
+
       <main className="main">
         <div className="container">
           {/* Hero Section */}
-          <div className="hero-section">
-            <h1 className="hero-title">Lifo</h1>
-            <h2 className="hero-subtitle">Life + Evolve</h2>
-            <p className="hero-description">
-              Transform your lifestyle with our comprehensive health and fitness platform
-            </p>
-          </div>
-
-          {/* Features Grid */}
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">🏋️‍♂️</div>
-              <h3>Fitness Tracker</h3>
-              <p>Track your workouts and build custom exercise plans</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🥗</div>
-              <h3>Nutrition Guide</h3>
-              <p>Discover healthy recipes and track your meals</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">📊</div>
-              <h3>Progress Analytics</h3>
-              <p>Monitor your health journey with detailed insights</p>
-            </div>
-          </div>
-
-          {/* News Section */}
-          <div className="news-section">
-            <h3 className="section-title">Latest Health News</h3>
-            <div className="news-grid">
-              <div className="news-card">
-                <h4>The Benefits of Regular Exercise</h4>
-                <p>Discover how consistent physical activity can transform your health...</p>
-              </div>
-              <div className="news-card">
-                <h4>Nutrition Tips for Better Energy</h4>
-                <p>Learn about foods that can boost your energy levels naturally...</p>
-              </div>
-              <div className="news-card">
-                <h4>Mental Health and Wellness</h4>
-                <p>Understanding the connection between physical and mental health...</p>
-              </div>
-            </div>
+          <div className="hero">
+            <h2>Discover Your Perfect Workout</h2>
+            <p>Search through thousands of exercises and build your custom workout plan</p>
           </div>
 
           {/* Search and Filters */}

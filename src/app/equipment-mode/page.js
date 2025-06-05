@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Dumbbell, X } from "lucide-react"
 import { getEquipmentList, getExercisesByEquipment } from "@/app/lib/api"
 
+
 export default function EquipmentModePage() {
   const [availableEquipment, setAvailableEquipment] = useState([])
   const [exercises, setExercises] = useState([])
@@ -284,9 +285,6 @@ export default function EquipmentModePage() {
                             </div>
 
                             <div className="exercise-actions">
-                              <Link href={`/exercise/${exercise.id}`} className="btn btn-outline">
-                                View Details
-                              </Link>
                               <button onClick={() => addToWorkout(exercise)} className="btn btn-primary">
                                 Add to Plan
                               </button>

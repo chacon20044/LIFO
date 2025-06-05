@@ -1,297 +1,219 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Search, Dumbbell, Target, Calendar, Shuffle } from "lucide-react"
-import { getAllExercises, getBodyPartList, getEquipmentList, getTargetList } from "@/app/lib/api"
+import { ArrowRight, Heart, Target, Users, Star, CheckCircle } from "lucide-react"
 import Header from "./header/page"
 
 export default function HomePage() {
-  const [exercises, setExercises] = useState([])
-  const [filteredExercises, setFilteredExercises] = useState([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedBodyPart, setSelectedBodyPart] = useState("")
-  const [selectedEquipment, setSelectedEquipment] = useState("")
-  const [selectedTarget, setSelectedTarget] = useState("")
-  const [bodyParts, setBodyParts] = useState([])
-  const [equipment, setEquipment] = useState([])
-  const [targets, setTargets] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      try {
-        const [exercisesData, bodyPartsData, equipmentData, targetsData] = await Promise.all([
-          getAllExercises(),
-          getBodyPartList(),
-          getEquipmentList(),
-          getTargetList(),
-        ])
-
-        setExercises(exercisesData)
-        setFilteredExercises(exercisesData)
-        setBodyParts(bodyPartsData)
-        setEquipment(equipmentData)
-        setTargets(targetsData)
-      } catch (error) {
-        console.error("Error fetching data:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    let filtered = exercises
-
-    if (searchTerm) {
-      filtered = filtered.filter(
-        (exercise) =>
-          exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          exercise.target.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          exercise.bodyPart.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    }
-
-    if (selectedBodyPart) {
-      filtered = filtered.filter((exercise) => exercise.bodyPart === selectedBodyPart)
-    }
-
-    if (selectedEquipment) {
-      filtered = filtered.filter((exercise) => exercise.equipment === selectedEquipment)
-    }
-
-    if (selectedTarget) {
-      filtered = filtered.filter((exercise) => exercise.target === selectedTarget)
-    }
-
-    setFilteredExercises(filtered)
-  }, [searchTerm, selectedBodyPart, selectedEquipment, selectedTarget, exercises])
-
-  const clearFilters = () => {
-    setSearchTerm("")
-    setSelectedBodyPart("")
-    setSelectedEquipment("")
-    setSelectedTarget("")
-  }
-
   return (
     <div className="page-container">
       <Header />
       <main className="main">
-        <div className="container">
-          {/* Hero Section */}
-          <div className="hero-section">
-            <h1 className="hero-title">Lifo</h1>
-            <h2 className="hero-subtitle">Life + Evolve</h2>
-            <p className="hero-description">
-              Transform your lifestyle with our comprehensive health and fitness platform
-            </p>
-          </div>
-
-          {/* Features Grid */}
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">🏋️‍♂️</div>
-              <h3>Fitness Tracker</h3>
-              <p>Track your workouts and build custom exercise plans</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🥗</div>
-              <h3>Nutrition Guide</h3>
-              <p>Discover healthy recipes and track your meals</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">📊</div>
-              <h3>Progress Analytics</h3>
-              <p>Monitor your health journey with detailed insights</p>
-            </div>
-          </div>
-
-          {/* News Section */}
-          <div className="news-section">
-            <h3 className="section-title">Latest Health News</h3>
-            <div className="news-grid">
-              <div className="news-card">
-                <h4>The Benefits of Regular Exercise</h4>
-                <p>Discover how consistent physical activity can transform your health...</p>
+        {/* Hero Section */}
+        <section className="hero-section-main">
+          <div className="container">
+            <div className="hero-content">
+              <div className="hero-logo">
+                <img src="/logo.png" alt="Lifo Logo" className="logo-image" />
               </div>
-              <div className="news-card">
-                <h4>Nutrition Tips for Better Energy</h4>
-                <p>Learn about foods that can boost your energy levels naturally...</p>
-              </div>
-              <div className="news-card">
-                <h4>Mental Health and Wellness</h4>
-                <p>Understanding the connection between physical and mental health...</p>
+              <h1 className="hero-title-main">Welcome to Lifo</h1>
+              <h2 className="hero-subtitle-main">Life + Evolve</h2>
+              <p className="hero-description-main">
+                Transform your lifestyle with our comprehensive health and fitness platform. Join thousands of people on
+                their journey to a healthier, happier life.
+              </p>
+              <div className="hero-buttons">
+                <Link href="/exercises" className="btn btn-primary btn-large">
+                  Start Your Journey 💪
+                </Link>
+                <Link href="/diets" className="btn btn-outline btn-large">
+                  Explore Nutrition 🍏
+                </Link>
               </div>
             </div>
           </div>
+        </section>
 
-          {/* Search and Filters */}
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">
-                <Search className="icon" />
-                Search & Filter Exercises
-              </h3>
+        {/* Features Section */}
+        <section className="features-section">
+          <div className="container">
+            <div className="section-header">
+              <h2 className="section-title">Everything You Need for a Healthy Life</h2>
+              <p className="section-description">
+                Our platform combines fitness tracking, nutrition guidance, and community support
+              </p>
             </div>
-            <div className="card-content">
-              <div className="filters">
-                <input
-                  type="text"
-                  placeholder="Search exercises..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="input search-input"
-                />
 
-                <select
-                  value={selectedBodyPart}
-                  onChange={(e) => setSelectedBodyPart(e.target.value)}
-                  className="select"
-                >
-                  <option value="">Body Part</option>
-                  {bodyParts.map((part) => (
-                    <option key={part} value={part}>
-                      {part.charAt(0).toUpperCase() + part.slice(1)}
-                    </option>
-                  ))}
-                </select>
-
-                <select
-                  value={selectedEquipment}
-                  onChange={(e) => setSelectedEquipment(e.target.value)}
-                  className="select"
-                >
-                  <option value="">Equipment</option>
-                  {equipment.map((eq) => (
-                    <option key={eq} value={eq}>
-                      {eq.charAt(0).toUpperCase() + eq.slice(1)}
-                    </option>
-                  ))}
-                </select>
-
-                <select value={selectedTarget} onChange={(e) => setSelectedTarget(e.target.value)} className="select">
-                  <option value="">Target Muscle</option>
-                  {targets.map((target) => (
-                    <option key={target} value={target}>
-                      {target.charAt(0).toUpperCase() + target.slice(1)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {(selectedBodyPart || selectedEquipment || selectedTarget || searchTerm) && (
-                <div className="active-filters">
-                  <div className="filter-badges">
-                    {searchTerm && <span className="badge badge-secondary">Search: {searchTerm}</span>}
-                    {selectedBodyPart && <span className="badge badge-secondary">Body: {selectedBodyPart}</span>}
-                    {selectedEquipment && <span className="badge badge-secondary">Equipment: {selectedEquipment}</span>}
-                    {selectedTarget && <span className="badge badge-secondary">Target: {selectedTarget}</span>}
-                  </div>
-                  <button onClick={clearFilters} className="btn btn-outline">
-                    Clear Filters
-                  </button>
+            <div className="features-grid-main">
+              <div className="feature-card-main">
+                <div className="feature-icon-main">
+                  <Target className="feature-icon-svg" />
                 </div>
-              )}
+                <h3>Smart Fitness Tracking</h3>
+                <p>Track your workouts, set goals, and monitor your progress with our intelligent fitness system</p>
+                <ul className="feature-list">
+                  <li>
+                    <CheckCircle className="check-icon" /> Custom workout plans
+                  </li>
+                  <li>
+                    <CheckCircle className="check-icon" /> Exercise library
+                  </li>
+                  <li>
+                    <CheckCircle className="check-icon" /> Progress analytics
+                  </li>
+                </ul>
+              </div>
+
+              <div className="feature-card-main">
+                <div className="feature-icon-main">
+                  <Heart className="feature-icon-svg" />
+                </div>
+                <h3>Nutrition Guidance</h3>
+                <p>Discover healthy recipes, track your meals, and learn about nutritional properties</p>
+                <ul className="feature-list">
+                  <li>
+                    <CheckCircle className="check-icon" /> Recipe database
+                  </li>
+                  <li>
+                    <CheckCircle className="check-icon" /> Meal planning
+                  </li>
+                  <li>
+                    <CheckCircle className="check-icon" /> Nutritional insights
+                  </li>
+                </ul>
+              </div>
+
+              <div className="feature-card-main">
+                <div className="feature-icon-main">
+                  <Users className="feature-icon-svg" />
+                </div>
+                <h3>Community Support</h3>
+                <p>Connect with like-minded individuals and share your health journey with others</p>
+                <ul className="feature-list">
+                  <li>
+                    <CheckCircle className="check-icon" /> Share recipes
+                  </li>
+                  <li>
+                    <CheckCircle className="check-icon" /> Community challenges
+                  </li>
+                  <li>
+                    <CheckCircle className="check-icon" /> Support network
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
+        </section>
 
-          {/* Quick Actions */}
-          <div className="quick-actions">
-            <Link href="/muscle-explorer" className="action-card">
-              <Target className="action-icon" />
-              <h3>Muscle Explorer</h3>
-              <p>Target specific muscles</p>
-            </Link>
-
-            <Link href="/workout-plan" className="action-card">
-              <Calendar className="action-icon" />
-              <h3>My Workout Plan</h3>
-              <p>Build custom workouts</p>
-            </Link>
-
-            <Link href="/equipment-mode" className="action-card">
-              <Dumbbell className="action-icon" />
-              <h3>Equipment Mode</h3>
-              <p>Filter by available equipment</p>
-            </Link>
-
-            <Link href="/random-exercise" className="action-card">
-              <Shuffle className="action-icon" />
-              <h3>Random Exercise</h3>
-              <p>Get a surprise workout</p>
-            </Link>
-          </div>
-
-          {/* Exercise Results */}
-          <div className="results-header">
-            <h3>Exercises ({filteredExercises.length})</h3>
-          </div>
-
-          <div className="exercise-grid">
-            {filteredExercises.map((exercise) => (
-              <ExerciseCard key={exercise.id} exercise={exercise} />
-            ))}
-          </div>
-
-          {filteredExercises.length === 0 && (
-            <div className="no-results">
-              <p>No exercises found matching your criteria.</p>
-              <button onClick={clearFilters} className="btn btn-primary">
-                Clear Filters
-              </button>
+        {/* Stats Section */}
+        <section className="stats-section">
+          <div className="container">
+            <div className="stats-grid">
+              <div className="stat-item">
+                <div className="stat-number">10K+</div>
+                <div className="stat-label">Active Users</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">500+</div>
+                <div className="stat-label">Exercises</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">1000+</div>
+                <div className="stat-label">Healthy Recipes</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">95%</div>
+                <div className="stat-label">Success Rate</div>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="testimonials-section">
+          <div className="container">
+            <div className="section-header">
+              <h2 className="section-title">What Our Users Say</h2>
+              <p className="section-description">Real stories from real people</p>
+            </div>
+
+            <div className="testimonials-grid">
+              <div className="testimonial-card">
+                <div className="testimonial-stars">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="star-icon" />
+                  ))}
+                </div>
+                <p className="testimonial-text">
+                  "Lifo has completely transformed my approach to health and fitness. The community support is amazing!"
+                </p>
+                <div className="testimonial-author">
+                  <div className="author-avatar">👩‍💼</div>
+                  <div>
+                    <div className="author-name">Sarah Johnson</div>
+                    <div className="author-title">Marketing Manager</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="testimonial-card">
+                <div className="testimonial-stars">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="star-icon" />
+                  ))}
+                </div>
+                <p className="testimonial-text">
+                  "The nutrition guidance helped me understand what my body really needs. I feel more energetic than
+                  ever!"
+                </p>
+                <div className="testimonial-author">
+                  <div className="author-avatar">👨‍💻</div>
+                  <div>
+                    <div className="author-name">Raul Ruiz</div>
+                    <div className="author-title">Graphic Designer</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="testimonial-card">
+                <div className="testimonial-stars">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="star-icon" />
+                  ))}
+                </div>
+                <p className="testimonial-text">
+                  "I love how easy it is to track my workouts and see my progress. The app is beautifully designed!"
+                </p>
+                <div className="testimonial-author">
+                  <div className="author-avatar">👩‍🎨</div>
+                  <div>
+                    <div className="author-name">Emma Davis</div>
+                    <div className="author-title">Graphic Designer</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="cta-section">
+          <div className="container">
+            <div className="cta-content">
+              <h2 className="cta-title">Ready to Start Your Health Journey?</h2>
+              <p className="cta-description">
+                Join thousands of people who have already transformed their lives with Lifo
+              </p>
+              <div className="cta-buttons">
+                <Link href="/exercises" className="btn btn-primary btn-large">
+                  Get Started Today
+                  <ArrowRight className="btn-icon" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
-    </div>
-  )
-}
-
-function ExerciseCard({ exercise }) {
-  const addToWorkout = () => {
-    const savedWorkouts = JSON.parse(localStorage.getItem("workoutPlan") || "[]")
-    const isAlreadyAdded = savedWorkouts.some((item) => item.id === exercise.id)
-
-    if (!isAlreadyAdded) {
-      savedWorkouts.push({
-        ...exercise,
-        sets: 3,
-        reps: 12,
-        duration: null,
-      })
-      localStorage.setItem("workoutPlan", JSON.stringify(savedWorkouts))
-      alert("Exercise added to your workout plan!")
-    } else {
-      alert("Exercise is already in your workout plan!")
-    }
-  }
-
-  return (
-    <div className="exercise-card">
-      <div className="exercise-image">
-        <img src={exercise.gifUrl || "/placeholder.svg"} alt={exercise.name} />
-      </div>
-      <div className="exercise-info">
-        <h3 className="exercise-title">{exercise.name}</h3>
-        <div className="exercise-badges">
-          <span className="badge badge-outline">{exercise.bodyPart}</span>
-          <span className="badge badge-outline">{exercise.target}</span>
-          <span className="badge badge-outline">{exercise.equipment}</span>
-        </div>
-        <div className="exercise-actions">
-          <Link href={`/exercise/${exercise.id}`} className="btn btn-outline">
-            View Details
-          </Link>
-          <button onClick={addToWorkout} className="btn btn-primary">
-            Add to Plan
-          </button>
-        </div>
-      </div>
     </div>
   )
 }

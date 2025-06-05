@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Trash2, Edit, Plus, Play, Save, Download } from "lucide-react"
+import { supabase } from "../lib/supabaseClient"
+
 
 export default function WorkoutPlanPage() {
   const [workoutPlan, setWorkoutPlan] = useState([])
@@ -10,6 +12,25 @@ export default function WorkoutPlanPage() {
   const [planDescription, setPlanDescription] = useState("")
   const [editingExercise, setEditingExercise] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    getUser()
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null)
+    })
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
+  }, [])
 
   useEffect(() => {
     const savedPlan = JSON.parse(localStorage.getItem("workoutPlan") || "[]")
@@ -37,10 +58,35 @@ export default function WorkoutPlanPage() {
     setShowEditModal(false)
   }
 
-  const savePlanDetails = () => {
-    localStorage.setItem("workoutPlanName", planName)
-    localStorage.setItem("workoutPlanDescription", planDescription)
-    alert("Workout plan saved!")
+  const savePlanDetails = async () => {
+    if (!user) {
+      alert("Please sign in to save your workout plan")
+      return
+    }
+
+    try {
+      const { data, error } = await supabase.from("workout_plans").insert([
+        {
+          user_id: user.id,
+          name: planName,
+          description: planDescription,
+          exercises: workoutPlan,
+        },
+      ])
+
+      if (error) {
+        console.error("Error saving workout plan:", error)
+        alert("Error saving workout plan: " + error.message)
+      } else {
+        alert("Workout plan saved successfully!")
+        // Clear the current plan after saving
+        setWorkoutPlan([])
+        localStorage.removeItem("workoutPlan")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+      alert("An error occurred while saving the workout plan")
+    }
   }
 
   const exportPlan = () => {

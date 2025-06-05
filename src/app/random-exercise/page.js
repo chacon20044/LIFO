@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Shuffle, RefreshCw, Plus, Filter } from "lucide-react"
 import { getAllExercises, getBodyPartList, getEquipmentList, getTargetList } from "@/app/lib/api"
 
+
 export default function RandomExercisePage() {
   const [currentExercise, setCurrentExercise] = useState(null)
   const [filterBodyPart, setFilterBodyPart] = useState("")
@@ -238,9 +239,6 @@ export default function RandomExercisePage() {
                           <Plus className="icon" />
                           Add to Plan
                         </button>
-                        <Link href={`/exercise/${currentExercise.id}`} className="btn btn-outline" style={{ flex: 1 }}>
-                          View Details
-                        </Link>
                       </div>
                     </div>
                   </div>

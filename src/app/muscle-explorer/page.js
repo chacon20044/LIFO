@@ -5,6 +5,8 @@ import Link from "next/link"
 import { Target } from "lucide-react"
 import { getTargetList, getExercisesByTarget } from "@/app/lib/api"
 
+
+
 export default function MuscleExplorerPage() {
   const [selectedMuscle, setSelectedMuscle] = useState("")
   const [exercises, setExercises] = useState([])
@@ -243,9 +245,6 @@ export default function MuscleExplorerPage() {
                             </div>
 
                             <div className="exercise-actions">
-                              <Link href={`/exercise/${exercise.id}`} className="btn btn-outline">
-                                View Details
-                              </Link>
                               <button onClick={() => addToWorkout(exercise)} className="btn btn-primary">
                                 Add to Plan
                               </button>

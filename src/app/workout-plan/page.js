@@ -280,10 +280,6 @@ export default function WorkoutPlanPage() {
                             <Edit className="icon" />
                           </button>
 
-                          <Link href={`/exercise/${exercise.id}`} className="btn btn-outline btn-small">
-                            <Play className="icon" />
-                          </Link>
-
                           <button onClick={() => removeExercise(exercise.id)} className="btn btn-outline btn-small">
                             <Trash2 className="icon" />
                           </button>
